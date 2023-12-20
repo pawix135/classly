@@ -15,6 +15,7 @@ model Teacher {
   email String
 
   classes ClassesOnTeachers[]
+  assignments AssignmentsOnTeachers[]
 
   @@unique([email])
 }
@@ -40,6 +41,7 @@ model Student {
   class Class @relation(fields: [classId], references: [id], onUpdate: Cascade)
   classId Int
 
+  assignments AssignmentsOnStudents[]
 
   @@unique([email, username])
 }
@@ -53,4 +55,39 @@ model ClassesOnTeachers {
   class Class @relation(fields: [classId], references: [id], onUpdate: Cascade)
   classId Int
 
+}
+
+model Assignment {
+  id Int @id @default(autoincrement())
+
+  name String
+  description String
+  deadline DateTime
+
+  teachers AssignmentsOnTeachers[]
+  teacherId Int
+
+  students AssignmentsOnStudents[]
+
+  @@unique([name])
+}
+
+model AssignmentsOnStudents {
+  id Int @id @default(autoincrement())
+
+  assignment Assignment @relation(fields: [assignmentId], references: [id], onUpdate: Cascade)
+  assignmentId Int
+
+  student Student @relation(fields: [studentId], references: [id], onUpdate: Cascade)
+  studentId Int
+}
+
+model AssignmentsOnTeachers {
+  id Int @id @default(autoincrement())
+
+  assignment Assignment @relation(fields: [assignmentId], references: [id], onUpdate: Cascade)
+  assignmentId Int
+
+  teacher Teacher @relation(fields: [teacherId], references: [id], onUpdate: Cascade)
+  teacherId Int
 }

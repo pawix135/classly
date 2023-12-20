@@ -15,9 +15,9 @@ describe("Test Component", () => {
 
 describe("Test Component Two", () => {
   it("renders a heading", () => {
-    render(<TestComponent />);
+    render(<TestComponentTwo />);
 
-    const heading = screen.getByRole("p", { level: 1 });
+    const heading = screen.findByRole("heading");
 
     expect(heading).toBeInTheDocument();
   });

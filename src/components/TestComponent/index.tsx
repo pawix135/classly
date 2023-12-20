@@ -1,7 +1,7 @@
 const TestComponent: React.FC = () => {
   return (
     <div>
-      <p>Test Component</p>
+      <h1>Test Component</h1>
     </div>
   );
 };

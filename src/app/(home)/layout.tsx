@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css";
+import "../globals.css";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/Theme";
 
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   description: "Classly is a class management app for teachers and students.",
 };
 
-export default function RootLayout({
+export default function StudentLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -26,7 +26,7 @@ export default function RootLayout({
       >
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
+          defaultTheme="dark"
           enableSystem
           disableTransitionOnChange
         >

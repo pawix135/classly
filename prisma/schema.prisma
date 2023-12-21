@@ -61,33 +61,50 @@ model Assignment {
   id Int @id @default(autoincrement())
 
   name String
+  slug String
   description String
+
+  start DateTime
   deadline DateTime
+  updated_at DateTime @updatedAt
+
+  pinned Boolean @default(false)
+  grade Int? @default(dbgenerated("NULL"))
 
   teachers AssignmentsOnTeachers[]
-  teacherId Int
+
+  status AssignmentStatus @default(NOT_STARTED)
 
   students AssignmentsOnStudents[]
 
-  @@unique([name])
+  @@unique([slug])
 }
 
 model AssignmentsOnStudents {
   id Int @id @default(autoincrement())
 
-  assignment Assignment @relation(fields: [assignmentId], references: [id], onUpdate: Cascade)
+  assignment Assignment @relation(fields: [assignmentId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   assignmentId Int
 
-  student Student @relation(fields: [studentId], references: [id], onUpdate: Cascade)
+  student Student @relation(fields: [studentId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   studentId Int
 }
 
 model AssignmentsOnTeachers {
   id Int @id @default(autoincrement())
 
-  assignment Assignment @relation(fields: [assignmentId], references: [id], onUpdate: Cascade)
+  assignment Assignment @relation(fields: [assignmentId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   assignmentId Int
 
-  teacher Teacher @relation(fields: [teacherId], references: [id], onUpdate: Cascade)
+  teacher Teacher @relation(fields: [teacherId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   teacherId Int
 }
+
+enum AssignmentStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  REVIEWING
+  COMPLETED
+  GRADED
+}
+

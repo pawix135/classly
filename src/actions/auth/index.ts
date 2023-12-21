@@ -6,6 +6,7 @@ import { SignInSchema } from "@/validators/user/auth";
 import { compare } from "bcrypt";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
+import { ACCESS_TOKEN_COOKIE_NAME } from "@/constants";
 
 export const signInAction = async (formData: FormData) => {
   try {
@@ -43,7 +44,7 @@ export const signInAction = async (formData: FormData) => {
     });
 
     // Set access token as cookie
-    cookies().set("itoken", accessToken, {
+    cookies().set(ACCESS_TOKEN_COOKIE_NAME, accessToken, {
       httpOnly: true,
       path: "/",
       expires: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000), // 60 days,
@@ -56,6 +57,16 @@ export const signInAction = async (formData: FormData) => {
     };
   }
 
+  console.log("should redirect...");
+
   // If student signed in successfully, redirect to dashboard
-  redirect("/dashboard");
+  redirect("../dashboard");
+};
+
+export const signOutAction = async () => {
+  // Remove access token cookie
+  cookies().delete(ACCESS_TOKEN_COOKIE_NAME);
+
+  // Redirect to home page
+  redirect("/");
 };

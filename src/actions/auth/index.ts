@@ -58,8 +58,6 @@ export const signInAction = async (formData: FormData) => {
     };
   }
 
-  console.log("should redirect...");
-
   // If student signed in successfully, redirect to dashboard
   redirect("../dashboard");
 };

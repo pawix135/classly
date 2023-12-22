@@ -8,4 +8,10 @@ declare module "jsonwebtoken" {
     surname: string;
     classId: number;
   }
+  export interface TeacherJwtPayload extends J.JwtPayload {
+    id: number;
+    username: string;
+    name: string;
+    surname: string;
+  }
 }

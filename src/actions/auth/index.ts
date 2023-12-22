@@ -41,6 +41,7 @@ export const signInAction = async (formData: FormData) => {
       username: student.username,
       name: student.name,
       surname: student.surname,
+      classId: student.classId,
     });
 
     // Set access token as cookie

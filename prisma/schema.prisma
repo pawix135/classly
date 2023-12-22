@@ -14,18 +14,49 @@ model Teacher {
   surname String
   email String
 
+  news TeacherClassOnNews[]
+
   classes ClassesOnTeachers[]
   assignments AssignmentsOnTeachers[]
 
   @@unique([email])
 }
 
+model News {
+  id Int @id @default(autoincrement())
+
+  title String
+  slug String
+  content String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  class TeacherClassOnNews[]
+
+  @@unique([slug])
+}
+
+
 model Class {
   id Int @id @default(autoincrement())
 
   teachers ClassesOnTeachers[]
   students Student[]
+  news TeacherClassOnNews[]
+}
 
+model TeacherClassOnNews{
+  id Int @id @default(autoincrement())
+
+  class Class @relation(fields: [classId], references: [id], onUpdate: Cascade)
+  classId Int
+
+  teacher Teacher @relation(fields: [teacherId], references: [id], onUpdate: Cascade)
+  teacherId Int
+
+  news News @relation(fields: [newsId], references: [id], onUpdate: Cascade)
+  newsId Int
 }
 
 model Student {

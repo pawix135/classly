@@ -1,73 +1,23 @@
 import DashboardCard from "@/components/Student/DashboardCard";
 import AssignmentItem from "@/components/Student/DashboardCard/AssignmentItem";
-import { db } from "@/db/prisma";
+import { getClassNews, getStudentInfo } from "@/db/fetchers/student";
 import { filterAssignmentsBy } from "@/utils/sort";
-import { useAuth } from "@/utils/useAuth";
-import { Prisma, AssignmentStatus, $Enums } from "@prisma/client";
+import { studentAuth } from "@/utils/useAuth";
 import { PinIcon } from "lucide-react";
 import { notFound } from "next/navigation";
 
-const getStudentInfo = async (id: number) => {
-  const data = await db.student.findFirst({
-    where: {
-      id: id,
-    },
-    select: {
-      assignments: {
-        include: {
-          assignment: {
-            select: {
-              pinned: true,
-              name: true,
-              status: true,
-              updated_at: true,
-              grade: true,
-            },
-          },
-        },
-      },
-      _count: {
-        select: {
-          assignments: true,
-        },
-      },
-    },
-    take: 5,
-  });
-
-  return data;
-};
-
-const getByClass = async (id: number) => {
-  return await db.teacher.findMany({
-    where: {
-      classes: {
-        some: {
-          id,
-        },
-      },
-    },
-  });
-};
-
-let fake = async (time: number) => {
-  return new Promise((res, rej) => {
-    setTimeout(() => {
-      res("done");
-    }, time);
-  });
-};
-
 const StudentDashboard = async () => {
-  let student = useAuth();
+  let student = studentAuth();
   if (!student) notFound();
 
-  let [teachers, studentInfo] = await Promise.all([
-    getByClass(1),
+  let [studentInfo, news] = await Promise.all([
     getStudentInfo(student.id),
+    getClassNews(student.classId, 5),
   ]);
 
-  if (!studentInfo) throw Error("XD");
+  if (!studentInfo) throw Error("Student info not found");
+
+  console.log(studentInfo, news);
 
   let pinnedAssignments = filterAssignmentsBy(
     studentInfo.assignments,
@@ -112,8 +62,8 @@ const StudentDashboard = async () => {
   });
 
   return (
-    <div className="bg-secondary container w-full mx-auto">
-      <div className="grid grid-flow-row grid-cols-3 grid-rows-2 gap-5 py-5 shadow-lg">
+    <div className="container w-full mx-auto">
+      <div className="grid grid-flow-row grid-cols-1 md:grid-cols-2  md:grid-flow-row lg:grid-cols-3 lg:grid-rows-2 gap-5 py-5">
         <DashboardCard title="Assignments">
           <AssignmentItem
             title="Total:"
@@ -134,7 +84,7 @@ const StudentDashboard = async () => {
             data={reviewedAssignments.length}
           />
         </DashboardCard>
-        <DashboardCard title="Pinned">
+        <DashboardCard title="Pinned assignments">
           {pinnedAssignments.length < 1 ? (
             <div>There's no pinned assignments</div>
           ) : (
@@ -181,9 +131,25 @@ const StudentDashboard = async () => {
             );
           })}
         </DashboardCard>
-
-        {/* <DashboardCard /> */}
-        {/* <DashboardCard title="Importante" /> */}
+        <DashboardCard title="Las">
+          <span>Test</span>
+        </DashboardCard>
+        <DashboardCard title="Last news">
+          {news.length < 1 ? (
+            <div>There's no news</div>
+          ) : (
+            news.map((_news, i) => {
+              return (
+                <div key={`news-${i}`}>
+                  <AssignmentItem
+                    title={_news.news.title}
+                    data={_news.news.content.substring(0, 20) + "..."}
+                  />
+                </div>
+              );
+            })
+          )}
+        </DashboardCard>
       </div>
     </div>
   );

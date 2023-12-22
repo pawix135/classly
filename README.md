@@ -11,6 +11,8 @@ This web application allows students and teachers to create and submit assignmen
 - Ability to download all the assignments as a zip file. `TODO`
 - Send email notifications to students when an assignment is created, reviewed or graded. `TODO`
 - Create group assignments. `TODO`
+- Custom grading system. `TODO`
+- Add news for students. `TODO`
 
 ## Features for students
 
@@ -18,3 +20,4 @@ This web application allows students and teachers to create and submit assignmen
 - You can add comments and tags( as `🟥 hard`, `🟩 easy`, `🟧 need help`) to your assignments to let teachers know about your progress and difficulties. `TODO`
 - Easy drag and drop interface to submit assignments.
 - Reminders for due assignments. `TODO`
+- Ability to download all/selected the assignments as a zip file. `TODO`

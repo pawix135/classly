@@ -4,7 +4,7 @@ import { ACCESS_TOKEN_COOKIE_NAME } from "@/constants";
 import { JwtPayload, decode } from "jsonwebtoken";
 
 // Get student data from access token
-export const useAuth = (): JwtPayload | null => {
+export const studentAuth = (): JwtPayload | null => {
   try {
     let accessToken = cookies().get(ACCESS_TOKEN_COOKIE_NAME);
 

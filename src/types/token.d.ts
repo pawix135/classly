@@ -6,5 +6,6 @@ declare module "jsonwebtoken" {
     username: string;
     name: string;
     surname: string;
+    classId: number;
   }
 }

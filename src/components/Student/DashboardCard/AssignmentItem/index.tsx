@@ -7,8 +7,8 @@ const AssignmentItem = ({
 }) => {
   return (
     <p className="flex flw-row justify-between" data-testid="assignment-item">
-      <span>{title}</span>
-      <span>{data}</span>
+      <span className="font-medium">{title}</span>
+      <span className="font-bold">{data}</span>
     </p>
   );
 };

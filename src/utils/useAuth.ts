@@ -1,9 +1,6 @@
 import "server-only";
 import { cookies } from "next/headers";
-import {
-  ACCESS_TOKEN_COOKIE_NAME,
-  TEACHER_ACCESS_TOKEN_COOKIE_NAME,
-} from "@/constants";
+import { ACCESS_TOKEN_COOKIE_NAME, TEACHER_ACCESS_TOKEN_COOKIE_NAME } from "@/constants";
 import { JwtPayload, TeacherJwtPayload, decode } from "jsonwebtoken";
 
 // Get student data from access token

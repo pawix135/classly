@@ -10,6 +10,8 @@ datasource db {
 model Teacher {
   id Int @id @default(autoincrement())
 
+  username String
+  hash String 
   name String
   surname String
   email String
@@ -18,6 +20,7 @@ model Teacher {
 
   classes ClassesOnTeachers[]
   assignments AssignmentsOnTeachers[]
+  supervisedClass Class?
 
   @@unique([email])
 }
@@ -40,10 +43,14 @@ model News {
 
 model Class {
   id Int @id @default(autoincrement())
-
+  name String
   teachers ClassesOnTeachers[]
   students Student[]
   news TeacherClassOnNews[]
+  supervisor Teacher @relation(fields: [supervisorId], references: [id], onUpdate: Cascade)
+  supervisorId Int 
+
+  @@unique([supervisorId])
 }
 
 model TeacherClassOnNews{

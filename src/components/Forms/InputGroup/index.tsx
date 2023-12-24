@@ -1,4 +1,5 @@
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { Label } from "@radix-ui/react-label";
 import React from "react";
@@ -6,7 +7,7 @@ import React from "react";
 interface Props {
   text: string;
   name: string;
-  type: React.ComponentProps<"input">["type"];
+  type: React.ComponentProps<"input">["type"] | "textarea";
   error?: string | undefined | null;
   placeholder?: string;
   testId?: string;
@@ -25,20 +26,36 @@ const InputGroup: React.FC<Props> = ({ text, name, type, error, placeholder, ...
         </Label>
         {error && <span className="text-red-500">{error}</span>}
       </div>
-      <Input
-        id={name}
-        name={name}
-        type={type}
-        placeholder={placeholder}
-        autoComplete={type == "password" ? "current-password" : "off"}
-        data-testid={name + "-input"}
-        className={cn(
-          {
-            "border-red-500": error,
-          },
-          props.className?.input
-        )}
-      />
+      {type == "textarea" ? (
+        <Textarea
+          rows={10}
+          name={name}
+          id={name}
+          placeholder={placeholder}
+          data-testid={name + "-textarea"}
+          className={cn(
+            {
+              "border-red-500": error,
+            },
+            props.className?.input
+          )}
+        />
+      ) : (
+        <Input
+          id={name}
+          name={name}
+          type={type}
+          placeholder={placeholder}
+          autoComplete={type == "password" ? "current-password" : "off"}
+          data-testid={name + "-input"}
+          className={cn(
+            {
+              "border-red-500": error,
+            },
+            props.className?.input
+          )}
+        />
+      )}
     </div>
   );
 };

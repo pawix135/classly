@@ -2,6 +2,7 @@ import { teacherAuth } from "@/utils/useAuth";
 import * as fetchers from "@/db/fetchers/Teacher";
 import TeacherDashboardClasses from "@/components/Teacher/Dashboard";
 import { redirect } from "next/navigation";
+import TeacherDashboardAssignments from "@/components/Teacher/Dashboard/Assignments";
 
 const TeacherDashboardPage = async () => {
   let teacher = teacherAuth();
@@ -17,8 +18,12 @@ const TeacherDashboardPage = async () => {
   });
 
   return (
-    <div className="container p-5 self-center">
+    <div className="container p-5 self-center flex flex-col gap-5">
       <TeacherDashboardClasses classes={sortedClasses} />
+      <TeacherDashboardAssignments
+        classes={sortedClasses.map((x) => ({ id: x.id, name: x.name }))}
+        teacherId={teacher.id}
+      />
     </div>
   );
 };

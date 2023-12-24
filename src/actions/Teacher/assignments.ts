@@ -1,0 +1,69 @@
+"use server";
+
+import { db } from "@/db/prisma";
+import { createAssignmentSlug } from "@/utils/slugs";
+import { CreateAssignmentSchema } from "@/validators/teacher/assignments";
+import { z } from "zod";
+
+export const createAssignment = async (state: any, formData: FormData) => {
+  try {
+    let validated = CreateAssignmentSchema.parse(Object.fromEntries(formData));
+
+    console.log(validated);
+
+    let students = await db.student.findMany({
+      where: {
+        classId: parseInt(validated.classId),
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    let data = await db.$transaction([
+      ...students.map((student: any) => {
+        return db.assignment.create({
+          data: {
+            name: validated.name,
+            description: validated.description,
+            deadline: new Date(),
+            start: new Date(),
+            slug: createAssignmentSlug(validated.name),
+            students: {
+              create: {
+                studentId: student.id,
+              },
+            },
+            teachers: {
+              create: {
+                teacherId: parseInt(validated.teacherId),
+              },
+            },
+          },
+        });
+      }),
+    ]);
+
+    console.log(data);
+
+    return null;
+  } catch (error) {
+    console.log(error);
+
+    if (error instanceof z.ZodError) {
+      return {
+        success: false,
+        errors: error.issues.map((issue) => ({
+          path: issue.path as any,
+          message: issue.message,
+        })),
+      };
+    }
+    return {
+      success: false,
+      errors: [{ path: ["internal_error"], message: "Something went wrong!" }],
+    };
+  }
+
+  return null;
+};

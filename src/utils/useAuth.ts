@@ -2,6 +2,7 @@ import "server-only";
 import { cookies } from "next/headers";
 import { ACCESS_TOKEN_COOKIE_NAME, TEACHER_ACCESS_TOKEN_COOKIE_NAME } from "@/constants";
 import { JwtPayload, TeacherJwtPayload, decode } from "jsonwebtoken";
+import { redirect } from "next/navigation";
 
 // Get student data from access token
 export const studentAuth = (): JwtPayload | null => {
@@ -23,7 +24,7 @@ export const teacherAuth = (): TeacherJwtPayload | null => {
   try {
     let accessToken = cookies().get(TEACHER_ACCESS_TOKEN_COOKIE_NAME);
 
-    if (!accessToken) return null;
+    if (!accessToken) redirect("/teacher/signin");
 
     let teacher = decode(accessToken.value);
 

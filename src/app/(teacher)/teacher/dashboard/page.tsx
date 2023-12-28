@@ -1,29 +1,36 @@
-import { teacherAuth } from "@/utils/useAuth";
-import * as fetchers from "@/db/fetchers/Teacher";
-import TeacherDashboardClasses from "@/components/Teacher/Dashboard";
-import { redirect } from "next/navigation";
-import TeacherDashboardAssignments from "@/components/Teacher/Dashboard/Assignments";
+import { teacherAuth } from '@/utils/useAuth';
+import * as fetchers from '@/db/fetchers/Teacher';
+import TeacherDashboardClasses from '@/components/Teacher/Dashboard';
+import { redirect } from 'next/navigation';
+import TeacherDashboardAssignments from '@/components/Teacher/Dashboard/Assignments';
+import TeacherDashboardNews from '@/components/Teacher/Dashboard/News';
 
 const TeacherDashboardPage = async () => {
   let teacher = teacherAuth();
 
-  if (!teacher) return redirect("/teacher/signin");
+  if (!teacher) return redirect('/teacher/signin');
 
-  let classWithStudents = await fetchers.getClassesWithStudents(teacher.id);
+  const [classWithStudents, lastSubmittedAssignments, latestNews] = await Promise.all([
+    fetchers.getClassesWithStudents(teacher.id),
+    fetchers.getLastSubmittedAssignments(teacher.id),
+    fetchers.getLatestNews(teacher.id),
+  ]);
 
-  let sortedClasses = classWithStudents.sort((a, b) => {
-    if (a.name > b.name) return 1;
-    if (a.name < b.name) return -1;
-    return 0;
-  });
+  let classes = classWithStudents.map((x) => ({ id: x.id, name: x.name }));
+  console.log(latestNews);
 
   return (
     <div className="container p-5 self-center flex flex-col gap-5">
-      <TeacherDashboardClasses classes={sortedClasses} />
-      <TeacherDashboardAssignments
-        classes={sortedClasses.map((x) => ({ id: x.id, name: x.name }))}
-        teacherId={teacher.id}
-      />
+      <TeacherDashboardClasses classes={classWithStudents} />
+      <h2 className="text-3xl font-bold">Last updates</h2>
+      <section className="grid grid-flow-row  md:grid-cols-2 grid-cols-1  gap-10">
+        <TeacherDashboardAssignments
+          classes={classes}
+          assignments={lastSubmittedAssignments}
+          teacherId={teacher.id}
+        />
+        <TeacherDashboardNews news={latestNews} classes={classes} />
+      </section>
     </div>
   );
 };

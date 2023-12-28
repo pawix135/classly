@@ -1,9 +1,10 @@
-"use server";
+'use server';
 
-import { db } from "@/db/prisma";
-import { createAssignmentSlug } from "@/utils/slugs";
-import { CreateAssignmentSchema } from "@/validators/teacher/assignments";
-import { z } from "zod";
+import { db } from '@/db/prisma';
+import { createAssignmentSlug } from '@/utils/slugs';
+import { CreateAssignmentSchema } from '@/validators/teacher/assignments';
+import { revalidatePath } from 'next/cache';
+import { z } from 'zod';
 
 export const createAssignment = async (state: any, formData: FormData) => {
   try {
@@ -46,7 +47,12 @@ export const createAssignment = async (state: any, formData: FormData) => {
 
     console.log(data);
 
-    return null;
+    revalidatePath('/(teacher)/teacher/dashboard');
+
+    return {
+      success: true,
+      errors: undefined,
+    };
   } catch (error) {
     console.log(error);
 
@@ -61,7 +67,7 @@ export const createAssignment = async (state: any, formData: FormData) => {
     }
     return {
       success: false,
-      errors: [{ path: ["internal_error"], message: "Something went wrong!" }],
+      errors: [{ path: ['internal_error'], message: 'Something went wrong!' }],
     };
   }
 

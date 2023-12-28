@@ -1,8 +1,8 @@
-import { Class } from "@prisma/client";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import Link from "next/link";
+import { Class } from '@prisma/client';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import Link from 'next/link';
 
 interface Props {
   classes: (Class & { students: { id: number; name: string; surname: string }[] })[];
@@ -27,9 +27,9 @@ export const TeacherDashboardClasses: React.FC<Props> = ({ classes }) => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="font-bold text-3xl">Classes</CardTitle>
+        <CardTitle className="font-bold text-3xl">Your classes</CardTitle>
       </CardHeader>
-      <CardContent className="grid grid-flow-row grid-cols-1  md:gird-flow-row md:grid-cols-3 gap-5 md:gap-10">
+      <CardContent className="grid grid-flow-row grid-cols-1  md:gird-flow-row md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-10">
         {classes.map((cls, clsI) => {
           let sortedStudents = sortStudents(cls.students);
 
@@ -37,7 +37,7 @@ export const TeacherDashboardClasses: React.FC<Props> = ({ classes }) => {
             <Card key={cls.name} data-testid="teacher-classes-container">
               <CardHeader>
                 <CardTitle className="flex flex-row">
-                  <Link href={"/teacher/dashboard/classes/" + cls.id}>{cls.name}</Link>
+                  <Link href={'/teacher/dashboard/classes/' + cls.id}>{cls.name}</Link>
                   <span className="ml-auto">{sortedStudents.length} students</span>
                 </CardTitle>
                 <Separator />

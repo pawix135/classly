@@ -1,18 +1,21 @@
-"use server";
+'use server';
 
-import { TEACHER_ACCESS_TOKEN_COOKIE_NAME } from "@/constants";
-import { db } from "@/db/prisma";
-import { createTeacherAccessToken } from "@/utils/tokens";
-import { TeacherSignInSchema } from "@/validators/teacher/auth";
-import { compare, hash } from "bcrypt";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
-import { z } from "zod";
+import { TEACHER_ACCESS_TOKEN_COOKIE_NAME } from '@/constants';
+import { db } from '@/db/prisma';
+import { createTeacherAccessToken } from '@/utils/tokens';
+import { TeacherSignInSchema } from '@/validators/teacher/auth';
+import { compare, hash } from 'bcrypt';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
+import { z } from 'zod';
 
 // Sign in teacher
 export const TeacherSignInAction = async (state: any, formdata: FormData) => {
   try {
     let validated = TeacherSignInSchema.parse(Object.fromEntries(formdata));
+
+    // Test password hash
+    // console.log(await hash('123', 10));
 
     // Find teacher in database
     let teacher = await db.teacher.findFirst({
@@ -24,7 +27,7 @@ export const TeacherSignInAction = async (state: any, formdata: FormData) => {
     // If teacher doesn't exist, return error
     if (!teacher) {
       return {
-        errors: [{ path: "username", message: "Invalid username" }],
+        errors: [{ path: 'username', message: 'Invalid username' }],
         auth: false,
       };
     }
@@ -33,7 +36,7 @@ export const TeacherSignInAction = async (state: any, formdata: FormData) => {
     if (!(await compare(validated.password, teacher.hash))) {
       return {
         auth: false,
-        errors: [{ path: ["password"], message: "Invalid password" }],
+        errors: [{ path: ['password'], message: 'Invalid password' }],
       };
     }
 
@@ -47,7 +50,7 @@ export const TeacherSignInAction = async (state: any, formdata: FormData) => {
     // Set access token as cookie
     cookies().set(TEACHER_ACCESS_TOKEN_COOKIE_NAME, accessToken, {
       httpOnly: true,
-      path: "/",
+      path: '/',
       expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // 1 day
     });
   } catch (error) {
@@ -67,26 +70,26 @@ export const TeacherSignInAction = async (state: any, formdata: FormData) => {
     // Something else went wrong, return internal server error
     return {
       auth: false,
-      errors: [{ path: ["internal_error"], message: "Internal server error" }],
+      errors: [{ path: ['internal_error'], message: 'Internal server error' }],
     };
   }
 
   // Successful sign in, redirect to dashboard
-  redirect("/teacher/dashboard");
+  redirect('/teacher/dashboard');
 };
 
 // TODO: Implement teacher account recovery
 export const TeacherForgotPasswordAction = async (state: any, formData: FormData) => {
-  console.log("TODO: Implement teacher account recovery");
+  console.log('TODO: Implement teacher account recovery');
 
   return {
     auth: false,
-    errors: [{ path: ["email"], message: "Invalid email" }],
+    errors: [{ path: ['email'], message: 'Invalid email' }],
   };
 };
 
 // Sign out teacher
 export const TeacherSignOutAction = async () => {
   cookies().delete(TEACHER_ACCESS_TOKEN_COOKIE_NAME);
-  redirect("/");
+  redirect('/');
 };

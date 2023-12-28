@@ -1,36 +1,42 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import TeacherAddAssignmentDialog from "./AddAssignmentDialog";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import TeacherAddAssignmentDialog from './AddAssignmentDialog';
+import DashbaordDateDisplay from '../DateDisplay';
 
 interface Props {
   classes: {
     id: number;
     name: string;
   }[];
+  assignments: {
+    id: number;
+    slug: string;
+    name: string;
+    updated_at: Date;
+  }[];
   teacherId: number;
 }
 
-const TeacherDashboardAssignments: React.FC<Props> = ({ classes, teacherId }) => {
+const TeacherDashboardAssignments: React.FC<Props> = ({ classes, assignments, teacherId }) => {
   return (
-    <section className="grid grid-flow-row md:grid-cols-3 grid-cols-1  gap-10">
-      <Card>
-        <CardHeader>
-          <CardTitle>Last assignments</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p>Assignment 1</p>
-          <p>Assignment 2</p>
-          <p>Assignment 3</p>
-          <p>Assignment 4</p>
-          <p>Assignment 5</p>
-          <TeacherAddAssignmentDialog classes={classes} teacherId={teacherId} />
-        </CardContent>
-      </Card>
-      <Card>
-        <CardHeader>
-          <CardTitle>Test</CardTitle>
-        </CardHeader>
-      </Card>
-    </section>
+    <Card>
+      <CardHeader>
+        <CardTitle>Assignments</CardTitle>
+      </CardHeader>
+      <CardContent>
+        {assignments.map((assignment, i) => {
+          return (
+            <div
+              key={`last-${assignment.id}`}
+              className="flex flex-row gap-2 items-center justify-between hover:bg-secondary p-2"
+            >
+              <span>{assignment.name}</span>
+              <DashbaordDateDisplay date={assignment.updated_at} />
+            </div>
+          );
+        })}
+        <TeacherAddAssignmentDialog classes={classes} teacherId={teacherId} />
+      </CardContent>
+    </Card>
   );
 };
 

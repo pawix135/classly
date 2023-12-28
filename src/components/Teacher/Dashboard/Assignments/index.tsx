@@ -23,17 +23,21 @@ const TeacherDashboardAssignments: React.FC<Props> = ({ classes, assignments, te
         <CardTitle>Assignments</CardTitle>
       </CardHeader>
       <CardContent>
-        {assignments.map((assignment, i) => {
-          return (
-            <div
-              key={`last-${assignment.id}`}
-              className="flex flex-row gap-2 items-center justify-between hover:bg-secondary p-2"
-            >
-              <span>{assignment.name}</span>
-              <DashbaordDateDisplay date={assignment.updated_at} />
-            </div>
-          );
-        })}
+        {assignments.length === 0 ? (
+          <div>There's no assignments yet!</div>
+        ) : (
+          assignments.map((assignment, i) => {
+            return (
+              <div
+                key={`last-${assignment.id}`}
+                className="flex flex-row gap-2 items-center justify-between hover:bg-secondary p-2"
+              >
+                <span>{assignment.name}</span>
+                <DashbaordDateDisplay date={assignment.updated_at} />
+              </div>
+            );
+          })
+        )}
         <TeacherAddAssignmentDialog classes={classes} teacherId={teacherId} />
       </CardContent>
     </Card>

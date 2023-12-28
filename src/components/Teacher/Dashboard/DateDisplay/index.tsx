@@ -3,9 +3,9 @@ interface Props {
 }
 const DashbaordDateDisplay: React.FC<Props> = ({ date }) => {
   return (
-    <span className="text-xs text-end">
-      <p>{date.toLocaleDateString()}</p>
-      <p>{date.toLocaleTimeString()}</p>
+    <span className="text-xs ">
+      <p suppressHydrationWarning>{date.toLocaleDateString()}</p>
+      <p suppressHydrationWarning>{date.toLocaleTimeString()}</p>
     </span>
   );
 };

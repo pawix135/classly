@@ -9,7 +9,10 @@ import { Toaster } from '@/components/ui/sonner';
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
 export const metadata: Metadata = {
-  title: 'Classly - Teacher',
+  title: {
+    template: '%s | Classly',
+    default: 'Classly',
+  },
   description: 'Classly is a class management app for teachers and students.',
 };
 

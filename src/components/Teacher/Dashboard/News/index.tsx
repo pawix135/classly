@@ -20,17 +20,21 @@ const TeacherDashboardNews: React.FC<Props> = ({ news, classes }) => {
         <CardTitle>News</CardTitle>
       </CardHeader>
       <CardContent>
-        {news.map((nws, i) => {
-          return (
-            <div
-              key={`news-${i}`}
-              className="flex flex-row gap-2 items-center justify-between hover:bg-secondary p-2"
-            >
-              <span className="">{nws.title}</span>
-              <DashbaordDateDisplay date={nws.updated_at} />
-            </div>
-          );
-        })}
+        {news.length === 0 ? (
+          <p className="">There's no news yet!</p>
+        ) : (
+          news.map((nws, i) => {
+            return (
+              <div
+                key={`news-${i}`}
+                className="flex flex-row gap-2 items-center justify-between hover:bg-secondary p-2"
+              >
+                <span className="">{nws.title}</span>
+                <DashbaordDateDisplay date={nws.updated_at} />
+              </div>
+            );
+          })
+        )}
         <AddClassNews classes={classes} />
       </CardContent>
     </Card>
